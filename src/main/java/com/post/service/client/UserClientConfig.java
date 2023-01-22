@@ -1,6 +1,7 @@
 package com.post.service.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.post.service.exception.CustomErrorDecoder;
 import feign.Feign;
 import feign.form.FormEncoder;
 import feign.jackson.JacksonDecoder;
@@ -14,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableFeignClients
 public class UserClientConfig {
-
+        @Autowired
         private ObjectMapper objectMapper;
 
         @Autowired
@@ -23,11 +24,12 @@ public class UserClientConfig {
         }
 
         @Bean
-        public UserClient userServiceClient(@Value("http://localhost:8080") final String endpoint) {
+        public UserClient userServiceClient(@Value("http://localhost:8080/users") final String endpoint) {
             return Feign.builder()
                     .encoder(new FormEncoder(new JacksonEncoder(objectMapper)))
                     .decoder(new JacksonDecoder(objectMapper))
                     .decode404()
+                    .errorDecoder(new CustomErrorDecoder())
                     .target(UserClient.class, endpoint);
         }
 

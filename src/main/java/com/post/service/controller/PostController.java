@@ -4,6 +4,8 @@ import com.post.service.model.Post;
 import com.post.service.service.PostService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,24 +22,41 @@ public class PostController {
         this.postService = postService;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}",  produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Post> getPost(@PathVariable("id") Long id) {
         Post response =  postService.getPost(id);
-        return ResponseEntity.ok(response);
+        if(response != null)
+            return ResponseEntity.ok(response);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Post> createPost(@RequestBody Post post) {
-        return ResponseEntity.ok( postService.createPost(post));
+        Post response = postService.createPost(post);
+        if(response != null)
+            return ResponseEntity.ok(response);
+         else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Post> deletePost(@PathVariable("id") Long id) {        ;
-        return ResponseEntity.ok(postService.deletePost(id));
+    @DeleteMapping(value = "/{id}",  produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Post> deletePost(@PathVariable("id") Long id) {
+        Post response = postService.deletePost(id);
+        if(response != null)
+            return ResponseEntity.ok(response);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}",  produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Post> updatePost(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(postService.updatePost(id));
+        if(id==null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        Post response = postService.updatePost(id);
+        if (response != null)
+            return ResponseEntity.ok(response);
+        else
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 }

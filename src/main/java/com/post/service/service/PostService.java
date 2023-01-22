@@ -21,14 +21,15 @@ public class PostService {
        return postMap.get(id);
     }
     public Post createPost(Post post){
+        Long authorId = post.getAuthorId();
         Post newPost = Post.builder()
                 .id(post.getId())
-                .authorId(post.getId())
+                .authorId(post.getAuthorId())
                 .text(post.getText())
                 .postedAt(post.getPostedAt())
                 .build();
         postMap.put(post.getId(), newPost);
-       client.updateUser(post.getAuthorId());
+       client.updateUser(authorId);
         return newPost;
     }
     public Post deletePost(Long id){
