@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  service:
+    build: .
+    ports:
+      - "8080"
+  post:
+    build: .
+    ports:
+      - "8082"
