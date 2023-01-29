@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Slf4j
 @Validated
 @RestController
@@ -23,17 +25,17 @@ public class PostController {
     }
 
     @GetMapping(value = "/{id}",  produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Post> getPost(@PathVariable("id") Long id) {
-        Post response =  postService.getPost(id);
-        if(response != null)
-            return ResponseEntity.ok(response);
-        else
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public com.post.service.repo.Post getPost(@PathVariable("id") Long id) {
+        Optional<com.post.service.repo.Post> response =  postService.getPost(id);
+
+            return response.orElseThrow();
+
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Post> createPost(@RequestBody Post post) {
-        Post response = postService.createPost(post);
+    public ResponseEntity<
+            com.post.service.repo.Post> createPost(@RequestBody Post post) {
+        com.post.service.repo.Post response = postService.createPost(post);
         if(response != null)
             return ResponseEntity.ok(response);
          else
@@ -41,22 +43,15 @@ public class PostController {
     }
 
     @DeleteMapping(value = "/{id}",  produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Post> deletePost(@PathVariable("id") Long id) {
-        Post response = postService.deletePost(id);
-        if(response != null)
-            return ResponseEntity.ok(response);
-        else
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public void deletePost(@PathVariable("id") Long id) {
+        postService.deletePost(id);
+
     }
 
     @PutMapping(value = "/{id}",  produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Post> updatePost(@PathVariable("id") Long id) {
-        if(id==null)
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        Post response = postService.updatePost(id);
-        if (response != null)
-            return ResponseEntity.ok(response);
-        else
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+    public Optional<com.post.service.repo.Post> updatePost(@PathVariable("id") Long id) {
+
+        return postService.updatePost(id);
+
     }
 }

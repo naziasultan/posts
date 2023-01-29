@@ -1,15 +1,17 @@
 package com.post.service.model;
-import lombok.Builder;
-import lombok.Data;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.*;
 
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 
 @Data
-@Builder
-
+@NoArgsConstructor
 public class Post {
-    private Long id;
+
     private Long authorId;
     private String text;
-    private String postedAt;
+
 }
